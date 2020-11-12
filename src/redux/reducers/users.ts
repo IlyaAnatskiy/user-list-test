@@ -1,4 +1,5 @@
-import { IAddUsers, IInitialStateUsers, IUsers } from '../../interfaces';
+import { ADD_USERS } from '../../constans';
+import { IAddUsers, IInitialStateUsers } from '../../interfaces';
 
 const initialState: IInitialStateUsers = {
   users: [],
@@ -6,7 +7,7 @@ const initialState: IInitialStateUsers = {
 
 export const users = (state = initialState, action: IAddUsers): IInitialStateUsers => {
   switch (action.type) {
-    case 'ADD_USERS':
+    case ADD_USERS:
       return {
         ...state,
         users: action.payload,

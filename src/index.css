@@ -36,3 +36,16 @@ code {
 .user__desc {
   font-size: 17px;
 }
+
+.page__item {
+  cursor: pointer;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+}
+
+.active {
+  border: 1px solid black;
+}

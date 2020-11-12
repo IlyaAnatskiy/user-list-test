@@ -1,34 +1,44 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import User from '../components/User';
-import { IInitialStateUsers, IUsers } from '../interfaces';
+import Pagination from '../components/Pagination';
+import RandomUser from '../components/RandomUser';
+import Users from '../components/Users';
+import { IUsers } from '../interfaces';
 import { fetchUsers } from '../redux/actions/users';
 import { RootState } from '../redux/reducers';
 
 const UsersPage: React.FC = () => {
   const dispatch = useDispatch();
-  const users = useSelector<RootState, IUsers[]>((state: RootState) => state.users.users);
-  const [activeUser, setActiveUser] = React.useState(0);
+  const [currentPage, setCurrentPage] = React.useState(1);
+  const [usersPerPage] = React.useState(5);
 
   React.useEffect(() => {
     dispatch(fetchUsers());
-    let intervalId = setInterval(() => {
-      setActiveUser(Math.floor(Math.random() * Math.floor(3)));
-    }, 8000);
-    return () => {
-      clearInterval(intervalId);
-    };
   }, []);
+  const users = useSelector((state: RootState) => state.users.users);
+
+  const indexOfLastUser = currentPage * usersPerPage;
+  const indexOfFirstUser = indexOfLastUser - usersPerPage;
+  const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
+  const paginate = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+  };
+
+  console.log(users);
 
   return (
     <section>
-      {<div className="user__name">{`${users[activeUser].surname} ${users[activeUser].name}`}</div>}
+      <RandomUser users={users} />
       <div className="users__list">
-        <ul>
-          {users && users.map((item, index) => <User key={`${item.id}_${index}`} {...item} />)}
-        </ul>
+        <Users users={currentUsers} />
       </div>
+      <Pagination
+        currentPage={currentPage}
+        usersPerPage={usersPerPage}
+        totalUsers={users.length}
+        paginate={paginate}
+      />
     </section>
   );
 };
